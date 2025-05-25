@@ -1,4 +1,16 @@
+import React, { useState } from "react";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
 export default ({ setCreateShipmentModel, allShipmentsdata }) => {
+  const [showChart, setShowChart] = useState(false);
+
   const converTime = (time) => {
     const newTime = new Date(time);
     const dataTime = new Intl.DateTimeFormat("en-US", {
@@ -10,14 +22,115 @@ export default ({ setCreateShipmentModel, allShipmentsdata }) => {
     return dataTime;
   };
 
-  console.log(allShipmentsdata);
+  const exportToCSV = () => {
+    const headers = [
+      "Sender",
+      "Receiver",
+      "Pickup Time",
+      "Distance",
+      "Price",
+      "Delivery Time",
+      "Paid",
+      "Status",
+    ];
+    const rows = allShipmentsdata.map((shipment) => [
+      shipment.sender,
+      shipment.receiver,
+      new Date(shipment.pickupTime).toLocaleDateString(),
+      shipment.distance,
+      shipment.price,
+      shipment.deliveryTime,
+      shipment.isPaid ? "Completed" : "Not Complete",
+      shipment.status === 0
+        ? "Pending"
+        : shipment.status === 1
+        ? "IN_TRANSIT"
+        : "Delivered",
+    ]);
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers, ...rows].map((e) => e.join(",")).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "shipments_data.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const chartData = allShipmentsdata?.map((shipment, idx) => ({
+    name: `#${idx + 1}`,
+    value: Number(shipment.price),
+  }));
+
+  const COLORS = [
+    "#8884d8",
+    "#82ca9d",
+    "#ffc658",
+    "#ff8042",
+    "#8dd1e1",
+    "#a4de6c",
+    "#d0ed57",
+    "#ffc0cb",
+    "#d88884",
+    "#84d8d8",
+  ];
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 md:px-8 py-12">
+      
+      <div className="flex gap-4 mb-6">
+        <button
+          onClick={exportToCSV}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-green-500"
+        >
+          📤 Export CSV
+        </button>
+        <button
+          onClick={() => setShowChart((prev) => !prev)}
+          className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-500"
+        >
+          📊 {showChart ? "Hide Graph" : "Show Graph"}
+        </button>
+      </div>
+
+      {/* Chart Display */}
+      {showChart && (
+        <div className="bg-white p-4 mb-10 rounded shadow">
+          <h2 className="text-xl font-bold mb-4">Automobile Shipment Data</h2>
+          <ResponsiveContainer width="100%" height={400}>
+            <PieChart>
+              <Pie
+                data={chartData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={120}
+                fill="#8884d8"
+                label={({ name, value }) => `${name}: ${value} POL`}
+              >
+                {chartData.map((_, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
       <div className="items-start justify-between md:flex">
         <div className="max-w-lg">
           <h3 className="text-gray-900 text-3xl font-bold sm:text-4xl">
-            🚗 Create Automotive Tracking
+            Create Automotive Tracking 🚗 
           </h3>
           <p className="text-gray-600 mt-3 text-base leading-relaxed">
             Easily create and track shipments in real-time. Monitor every move
@@ -68,7 +181,7 @@ export default ({ setCreateShipmentModel, allShipmentsdata }) => {
                   {shipment.distance} Km
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                   {shipment.price} POL
+                  {shipment.price} POL
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {shipment.deliveryTime}
