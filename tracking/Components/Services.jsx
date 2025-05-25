@@ -10,23 +10,26 @@ export default ({
   const team = [
     {
       avatar: images.startShipment,
-      title: "Start Automobile Shipment",
-      description: "Initiate a new shipment after entering the ID and Receiver's Wallet address.",
+      title: "Initiate Automobile Shipment",
+      description:
+        "Begin a new shipment by entering the shipment ID and the recipient's wallet address.",
     },
     {
       avatar: images.getShipment,
-      title: "Get Automobile Shipment Details",
-      description: "Retrieve details.",
+      title: "View Shipment Details",
+      description:
+        "Access detailed information regarding an existing automobile shipment.",
     },
     {
       avatar: images.compShipment,
-      title: "Complete Automobile Shipment",
-      description: "Mark a shipment as complete. And store in POL blockchain",
+      title: "Finalize Automobile Shipment",
+      description:
+        "Mark a shipment as complete and securely store the record on the POL blockchain.",
     },
     {
       avatar: images.userProfile,
-      title: "User Profile",
-      description: "View user profile info.",
+      title: "Access User Profile",
+      description: "View and manage user profile and related information.",
     },
   ];
 
@@ -41,7 +44,9 @@ export default ({
     <section className="py-12 bg-gray-50">
       <div className="max-w-screen-xl mx-auto px-4 md:px-8">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-800">SupplyGraphX: Automobile Supply Chain Management System!</h2>
+          <h2 className="text-3xl font-bold text-gray-800">
+            SupplyGraphX: Automobile Supply Chain Management System
+          </h2>
           <p className="mt-2 text-gray-600">Supply Smarter. Drive Further.</p>
         </div>
 
