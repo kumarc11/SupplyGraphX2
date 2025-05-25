@@ -57,7 +57,7 @@ export default () => {
           </div>
         </div>
 
-        {/* Navigation Links */}
+        
         <div
           className={`flex-1 items-center mt-8 md:mt-0 md:flex ${
             state ? "block" : "hidden"
@@ -76,12 +76,15 @@ export default () => {
             ))}
           </ul>
 
-          
           <div className="mt-6 md:mt-0 md:ml-auto flex items-center gap-x-4">
             {currentUser ? (
-              <p className="flex items-center justify-center gap-x-1 py-2 px-4 text-white font-semibold bg-indigo-600 hover:bg-indigo-700 rounded-full transition">
+              <button
+                onClick={() => navigator.clipboard.writeText(currentUser)}
+                title="Click to copy address"
+                className="flex items-center justify-center gap-x-1 py-2 px-4 text-white font-semibold bg-indigo-600 hover:bg-indigo-700 rounded-full transition"
+              >
                 {currentUser.slice(0, 25)}..
-              </p>
+              </button>
             ) : (
               <button
                 onClick={() => connectWallet()}
